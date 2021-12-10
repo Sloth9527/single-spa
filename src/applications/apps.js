@@ -74,6 +74,10 @@ export function getMountedApps() {
   return apps.filter(isActive).map(toName);
 }
 
+/**
+ * 获取已经注册的子应用
+ * @returns
+ */
 export function getAppNames() {
   return apps.map(toName);
 }
@@ -88,6 +92,13 @@ export function getAppStatus(appName) {
   return app ? app.status : null;
 }
 
+/**
+ * 注册 子应用
+ * @param {*} appNameOrConfig
+ * @param {*} appOrLoadApp
+ * @param {*} activeWhen
+ * @param {*} customProps
+ */
 export function registerApplication(
   appNameOrConfig,
   appOrLoadApp,
@@ -101,6 +112,7 @@ export function registerApplication(
     customProps
   );
 
+  // 检测 name 是否重复注册
   if (getAppNames().indexOf(registration.name) !== -1)
     throw Error(
       formatErrorMessage(
@@ -269,7 +281,16 @@ function validateRegisterWithArguments(
     );
 }
 
+/**
+ * 校验 注册子应用 appNameOrConfig参数为Config状态下 是否合法
+ * @param {*} config
+ * @param {*} config.name
+ * @param {*} config.app
+ * @param {*} config.activeWhen
+ * @param {*} config.customProps
+ */
 export function validateRegisterWithConfig(config) {
+  // 排除 typeof config === object 下为 Array null 的情况
   if (Array.isArray(config) || config === null)
     throw Error(
       formatErrorMessage(
@@ -278,6 +299,7 @@ export function validateRegisterWithConfig(config) {
       )
     );
   const validKeys = ["name", "app", "activeWhen", "customProps"];
+  // 排除 非validKeys允许的key
   const invalidKeys = Object.keys(config).reduce(
     (invalidKeys, prop) =>
       validKeys.indexOf(prop) >= 0 ? invalidKeys : invalidKeys.concat(prop),
@@ -295,6 +317,7 @@ export function validateRegisterWithConfig(config) {
         invalidKeys.join(", ")
       )
     );
+  // 校验 name 是否是非空字符串
   if (typeof config.name !== "string" || config.name.length === 0)
     throw Error(
       formatErrorMessage(
@@ -303,6 +326,7 @@ export function validateRegisterWithConfig(config) {
           "The config.name on registerApplication must be a non-empty string"
       )
     );
+  // 校验 name 是否是非函数对象
   if (typeof config.app !== "object" && typeof config.app !== "function")
     throw Error(
       formatErrorMessage(
@@ -336,6 +360,11 @@ export function validateRegisterWithConfig(config) {
     );
 }
 
+/**
+ *
+ * @param {*} customProps
+ * @returns
+ */
 function validCustomProps(customProps) {
   return (
     !customProps ||
@@ -346,6 +375,15 @@ function validCustomProps(customProps) {
   );
 }
 
+/**
+ * 整理 注册参数
+ * @param {*} appNameOrConfig
+ * @param {*} appOrLoadApp
+ * @param {*} activeWhen
+ * @param {*} customProps
+ * @returns {object} { name:  loadApp:  activeWhen: customProps: }
+ *
+ */
 function sanitizeArguments(
   appNameOrConfig,
   appOrLoadApp,

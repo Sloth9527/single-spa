@@ -18,6 +18,11 @@ export function isActive(app) {
   return app.status === MOUNTED;
 }
 
+/**
+ * 判断当前 location 是否与 activeWhen 匹配
+ * @param {*} app
+ * @returns
+ */
 export function shouldBeActive(app) {
   try {
     return app.activeWhen(window.location);
@@ -27,6 +32,11 @@ export function shouldBeActive(app) {
   }
 }
 
+/**
+ * 获取 app.name
+ * @param {*} app
+ * @returns
+ */
 export function toName(app) {
   return app.name;
 }

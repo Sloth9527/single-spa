@@ -47,6 +47,13 @@ export function removeErrorHandler(handler) {
   return removedSomething;
 }
 
+/**
+ * 格式化错误消息格式
+ * @param {*} code
+ * @param {*} msg
+ * @param  {...any} args
+ * @returns
+ */
 export function formatErrorMessage(code, msg, ...args) {
   return `single-spa minified message #${code}: ${
     msg ? msg + " " : ""

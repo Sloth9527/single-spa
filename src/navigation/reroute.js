@@ -51,6 +51,7 @@ export function reroute(pendingPromises = [], eventArguments) {
     appsToLoad,
     appsToMount,
   } = getAppChanges();
+
   let appsThatChanged,
     navigationIsCanceled = false,
     oldUrl = currentUrl,
